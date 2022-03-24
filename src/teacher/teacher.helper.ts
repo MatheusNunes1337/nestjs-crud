@@ -27,7 +27,15 @@ export class TeacherHelper {
     const { name } = subject;
     const subjectExists = await this.subjectRepo.findOne({ where: { name } });
     if (subjectExists) return false;
+    return true;
+  }
 
+  async teacherExists(teacherId: number): Promise<boolean> {
+    const teacherExists = await this.teacherRepo.findOne({
+      where: { id: teacherId },
+    });
+
+    if (!teacherExists) return false;
     return true;
   }
 }

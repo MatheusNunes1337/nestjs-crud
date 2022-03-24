@@ -26,6 +26,8 @@ export class Subject {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Teacher, (teacher) => teacher.subjects)
+  @ManyToOne(() => Teacher, (teacher) => teacher.subjects, {
+    onDelete: 'CASCADE',
+  })
   teacher: Teacher;
 }

@@ -35,6 +35,8 @@ export class Teacher {
   })
   updatedAt: Date;
 
-  @OneToMany(() => Subject, (subject) => subject.teacher)
+  @OneToMany(() => Subject, (subject) => subject.teacher, {
+    cascade: ['insert', 'update'],
+  })
   subjects: Subject[];
 }

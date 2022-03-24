@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subject } from 'src/subject/entities/subject.entity';
 import { Repository } from 'typeorm';
 import { Teacher } from './entities/teacher.entity';
+
+interface ISubject {
+  name: string;
+}
 
 @Injectable()
 export class TeacherHelper {
@@ -14,8 +18,16 @@ export class TeacherHelper {
   ) {}
 
   async isCpfUnique(cpf: string): Promise<boolean> {
-    const cpfExists = await this.teacherRepo.findOne({ cpf });
+    const cpfExists = await this.teacherRepo.findOne({ where: { cpf } });
     if (cpfExists) return false;
-    else true;
+    return true;
+  }
+
+  async isSubjectUnique(subject: ISubject): Promise<boolean> {
+    const { name } = subject;
+    const subjectExists = await this.subjectRepo.findOne({ where: { name } });
+    if (subjectExists) return false;
+
+    return true;
   }
 }

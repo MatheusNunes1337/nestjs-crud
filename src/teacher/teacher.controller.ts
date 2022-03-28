@@ -13,7 +13,6 @@ import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { Teacher } from './entities/teacher.entity';
-import { SearchTeacherDto } from './dto/search-teacher.dto';
 
 @Controller('api/v1/teacher')
 export class TeacherController {
@@ -25,8 +24,8 @@ export class TeacherController {
   }
 
   @Get()
-  async findAll(@Query() query: SearchTeacherDto): Promise<Teacher[]> {
-    return await this.teacherService.findAll(query);
+  async findAll(): Promise<Teacher[]> {
+    return await this.teacherService.findAll();
   }
 
   @Get(':id')

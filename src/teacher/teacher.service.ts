@@ -42,7 +42,7 @@ export class TeacherService {
     return this.teacherRepository.save(createTeacherDto);
   }
 
-  findAll(query): Promise<Teacher[]> {
+  findAll(): Promise<Teacher[]> {
     return this.teacherRepository.find({ relations: ['subjects'] });
   }
 
@@ -60,14 +60,42 @@ export class TeacherService {
     id: number,
     updateTeacherDto: UpdateTeacherDto,
   ): Promise<Teacher> {
+    const teacherExists = await this.teacherHelper.teacherExists(id);
+    if (!teacherExists) throw new NotFoundException('Teacher not found');
+
     const { cpf } = updateTeacherDto;
     const isCpfUnique = await this.teacherHelper.isCpfUnique(cpf);
     if (!isCpfUnique) throw new ConflictException(`CPF ${cpf} already in use`);
 
-    await this.findOne(id);
-    await this.teacherRepository.update(id, updateTeacherDto);
+    const { subjects } = updateTeacherDto;
 
-    return this.findOne(id);
+    if (subjects) {
+      await Promise.all(
+        subjects.map(async (subject) => {
+          const isSubjectUnique = await this.teacherHelper.isSubjectUnique(
+            subject,
+          );
+          if (!isSubjectUnique)
+            throw new ConflictException(
+              `it seems that the ${subject.name} subject is already being taught by another teacher `,
+            );
+        }),
+      );
+    }
+
+    const updatedTeacher = await this.teacherRepository.save({
+      id,
+      ...updateTeacherDto,
+    });
+
+    await this.subjectRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Subject)
+      .where('teacherId IS NULL')
+      .execute();
+
+    return updatedTeacher;
   }
 
   async remove(id: number) {

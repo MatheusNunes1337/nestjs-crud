@@ -39,15 +39,4 @@ export class Teacher {
     cascade: ['insert', 'update'],
   })
   subjects: Subject[];
-
-  constructor(teacher?: Partial<Teacher>) {
-    this.id = teacher?.id;
-    this.name = teacher?.name;
-    this.lastname = teacher?.lastname;
-    this.cpf = teacher?.cpf;
-    this.birthdate = teacher?.birthdate;
-    this.createdAt = teacher?.createdAt;
-    this.updatedAt = teacher?.updatedAt;
-    this.subjects = teacher?.subjects;
-  }
 }

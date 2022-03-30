@@ -3,18 +3,31 @@ import { TeacherController } from './teacher.controller';
 import { TeacherService } from './teacher.service';
 
 describe('TeacherController', () => {
-  let controller: TeacherController;
+  let teacherController: TeacherController;
+  let teacherService: TeacherService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TeacherController],
-      providers: [TeacherService],
+      providers: [
+        {
+          provide: TeacherService,
+          useValue: {
+            save: jest.fn(),
+            find: jest.fn(),
+            findOne: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    controller = module.get<TeacherController>(TeacherController);
+    teacherController = module.get<TeacherController>(TeacherController);
+    teacherService = module.get<TeacherService>(TeacherService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(teacherController).toBeDefined();
+    expect(teacherService).toBeDefined();
   });
 });

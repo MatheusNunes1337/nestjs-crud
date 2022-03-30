@@ -19,8 +19,8 @@ export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
   @Post()
-  async create(@Body() createTeacherDto: CreateTeacherDto): Promise<Teacher> {
-    return await this.teacherService.create(createTeacherDto);
+  async create(@Body() createTeacherDto: CreateTeacherDto) {
+    return this.teacherService.create(createTeacherDto);
   }
 
   @Get()

@@ -4,7 +4,6 @@ import { TeacherService } from './teacher.service';
 
 describe('TeacherController', () => {
   let teacherController: TeacherController;
-  let teacherService: TeacherService;
 
   const mockTeacherService = {
     create: jest.fn((dto) => {
@@ -14,6 +13,21 @@ describe('TeacherController', () => {
         createdAt: 'any_date',
         updatedAt: 'any_date',
       });
+    }),
+    findOne: jest.fn((id) => {
+      return {
+        id,
+        name: 'any_name',
+        lastname: 'any_lastname',
+        cpf: 'any_cpf',
+        birthdate: 'any_date',
+        subjects: [
+          {
+            id: Math.random(),
+            name: 'any_subject',
+          },
+        ],
+      };
     }),
     update: jest.fn((id, dto) => {
       return {
@@ -62,12 +76,32 @@ describe('TeacherController', () => {
     expect(mockTeacherService.create).toHaveBeenCalledWith(createTeacherDto);
   });
 
-  it('should update a teacher name', async () => {
+  it('should update teacher name', async () => {
     const updateTeacherDto = { name: 'any_name' };
     expect(await teacherController.update('1', updateTeacherDto)).toEqual({
       id: 1,
       ...updateTeacherDto,
       updatedAt: expect.any(String),
     });
+
+    expect(mockTeacherService.update).toHaveBeenCalled();
+  });
+
+  it('should find a teacher by id', async () => {
+    expect(await teacherController.findOne('2')).toEqual({
+      id: 2,
+      name: expect.any(String),
+      lastname: expect.any(String),
+      cpf: expect.any(String),
+      birthdate: expect.any(String),
+      subjects: expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+        }),
+      ]),
+    });
+
+    expect(mockTeacherService.findOne).toHaveBeenCalled();
   });
 });

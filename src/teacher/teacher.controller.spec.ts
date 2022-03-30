@@ -54,6 +54,9 @@ describe('TeacherController', () => {
         updatedAt: 'any_date',
       };
     }),
+    remove: jest.fn((id) => {
+      return {};
+    }),
   };
 
   beforeEach(async () => {
@@ -140,6 +143,11 @@ describe('TeacherController', () => {
       ]),
     });
 
-    expect(mockTeacherService.findOne).toHaveBeenCalled();
+    expect(mockTeacherService.findOne).toHaveBeenCalledWith(2);
+  });
+
+  it('should delete a teacher', async () => {
+    console.log(teacherController.remove('1'));
+    expect(mockTeacherService.remove).toHaveBeenCalledWith(1);
   });
 });

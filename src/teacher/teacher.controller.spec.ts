@@ -14,6 +14,24 @@ describe('TeacherController', () => {
         updatedAt: 'any_date',
       });
     }),
+    findAll: jest.fn(() => {
+      const teachers = [
+        {
+          id: Math.floor(Math.random() * 6) + 1,
+          name: 'any_name',
+          lastname: 'any_lastname',
+          cpf: 'any_cpf',
+          birthdate: 'any_date',
+          subjects: [
+            {
+              id: Math.random(),
+              name: 'any_subject',
+            },
+          ],
+        },
+      ];
+      return teachers;
+    }),
     findOne: jest.fn((id) => {
       return {
         id,
@@ -85,6 +103,26 @@ describe('TeacherController', () => {
     });
 
     expect(mockTeacherService.update).toHaveBeenCalled();
+  });
+
+  it('should get all teachers', async () => {
+    expect(await teacherController.findAll()).toEqual([
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        lastname: expect.any(String),
+        cpf: expect.any(String),
+        birthdate: expect.any(String),
+        subjects: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+          }),
+        ]),
+      }),
+    ]);
+
+    expect(mockTeacherService.findAll).toHaveBeenCalled();
   });
 
   it('should find a teacher by id', async () => {

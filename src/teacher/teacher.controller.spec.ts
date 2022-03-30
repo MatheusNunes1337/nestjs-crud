@@ -15,6 +15,13 @@ describe('TeacherController', () => {
         updatedAt: 'any_date',
       });
     }),
+    update: jest.fn((id, dto) => {
+      return {
+        id,
+        ...dto,
+        updatedAt: 'any_date',
+      };
+    }),
   };
 
   beforeEach(async () => {
@@ -49,6 +56,17 @@ describe('TeacherController', () => {
       ...createTeacherDto,
       id: expect.any(Number),
       createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+    });
+
+    expect(mockTeacherService.create).toHaveBeenCalledWith(createTeacherDto);
+  });
+
+  it('should update a teacher name', async () => {
+    const updateTeacherDto = { name: 'any_name' };
+    expect(await teacherController.update('1', updateTeacherDto)).toEqual({
+      id: 1,
+      ...updateTeacherDto,
       updatedAt: expect.any(String),
     });
   });

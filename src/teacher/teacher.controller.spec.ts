@@ -48,7 +48,7 @@ describe('Given the TeacherController', () => {
       },
     ]),
     findOne: jest.fn((id) => {
-      return {
+      return Promise.resolve({
         id,
         name: 'any_name',
         lastname: 'any_lastname',
@@ -60,17 +60,17 @@ describe('Given the TeacherController', () => {
             name: 'any_subject',
           },
         ],
-      };
+      });
     }),
     update: jest.fn((id, dto) => {
-      return {
+      return Promise.resolve({
         id,
         ...dto,
         updatedAt: 'any_date',
-      };
+      });
     }),
     remove: jest.fn((id) => {
-      return {};
+      return Promise.resolve({});
     }),
   };
 

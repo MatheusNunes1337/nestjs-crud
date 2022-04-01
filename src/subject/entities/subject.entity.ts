@@ -7,16 +7,20 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Subject {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @Column({ unique: true })
+  @ApiProperty()
   name: string;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP(6)', select: false })
+  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn({
@@ -24,10 +28,12 @@ export class Subject {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
     select: false,
   })
+  @ApiProperty()
   updatedAt: Date;
 
   @ManyToOne(() => Teacher, (teacher) => teacher.subjects, {
     onDelete: 'CASCADE',
   })
+  @ApiProperty()
   teacher: Teacher;
 }
